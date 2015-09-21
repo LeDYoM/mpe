@@ -21,7 +21,7 @@ static const char *fragmentShaderSource =
     "   gl_FragColor = col;\n"
     "}\n";
 
-void MaterialManager::initialize()
+MaterialManager::MaterialManager()
 {
     VERBOSE_MESSAGE("Initializing MaterialManager");
     _defaultMaterial = new Material();
@@ -29,7 +29,7 @@ void MaterialManager::initialize()
     VERBOSE_MESSAGE("MaterialManager initialized");
 }
 
-void MaterialManager::deinitialize()
+MaterialManager::~MaterialManager()
 {
     VERBOSE_MESSAGE("Destroying MaterialManager");
     if (_defaultMaterial)
@@ -37,6 +37,7 @@ void MaterialManager::deinitialize()
         delete _defaultMaterial;
         _defaultMaterial = nullptr;
     }
+    VERBOSE_MESSAGE("MaterialManager destroyed");
 }
 
 void MaterialManager::setProjectionMatrix(const QMatrix4x4 &projectionMatrix)
@@ -49,8 +50,20 @@ Material::~Material() {}
 
 void Material::setAsDefault()
 {
-    m_program = new QOpenGLShaderProgram();
-    m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
-    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
-    m_program->link();
+    m_program = ShaderManager::GetInstance()->defaultShader();
+}
+
+
+ShaderManager::ShaderManager()
+{
+    _defaultShader = new QOpenGLShaderProgram();
+    _defaultShader->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
+    _defaultShader->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
+    _defaultShader->link();
+}
+
+ShaderManager::~ShaderManager()
+{
+    _defaultShader->release();
+    delete _defaultShader;
 }

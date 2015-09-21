@@ -15,6 +15,8 @@ MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 
 MPEGLWidget::~MPEGLWidget()
 {
+    MaterialManager::destroy();
+    ShaderManager::destroy();
 }
 
 RenderBuffer *rBuffer;
@@ -35,8 +37,8 @@ void MPEGLWidget::initializeGL()
     DEBUG_MESSAGE("                    VERSION:      " << (const char*)f->glGetString(GL_VERSION));
     DEBUG_MESSAGE("                    GLSL VERSION: " << (const char*)f->glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-    _materialManager = new MaterialManager();
-    _materialManager->initialize();
+    ShaderManager::create();
+    MaterialManager::create();
 
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MPEGLWidget::destroyGL);
 
@@ -88,9 +90,9 @@ void MPEGLWidget::paintGL()
     glFunctions()->glClear(GL_COLOR_BUFFER_BIT);
 
     Renderer renderer;
-
+    MaterialManager *materialManager = MaterialManager::GetInstance();
     renderer.setProjectionMatrix(&m_projection);
-    renderer.render(_materialManager->defaultMaterial(),rBuffer);
+    renderer.render2(materialManager->defaultMaterial(),rBuffer);
     updateFps();
     update();
 }
@@ -98,9 +100,7 @@ void MPEGLWidget::paintGL()
 void MPEGLWidget::destroyGL()
 {
     // TO DO: Is Never called.
-    _materialManager->deinitialize();
-    delete _materialManager;
-
+    MaterialManager::destroy();
 }
 
 void MPEGLWidget::updateFps()

@@ -21,11 +21,9 @@ protected:
     virtual void paintGL() override;
     virtual void destroyGL();
 
-    inline MaterialManager *materialManager() const { return _materialManager; }
 private:
     void updateFps();
     QMatrix4x4 m_projection;
-    MaterialManager *_materialManager{nullptr};
     unsigned int m_frame{0};
     unsigned int m_fps_frame{0};
     unsigned int last_fps{0};

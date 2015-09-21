@@ -3,9 +3,11 @@
 
 #include <list>
 #include "openglmanager.h"
+#include "singleton.h"
 #include <QMatrix4x4>
 
 class QOpenGLShaderProgram;
+using QOpenGLShaderProgramPtr = QOpenGLShaderProgram *;
 
 class Material : public OpenGLUser
 {
@@ -19,22 +21,19 @@ public:
     Q_DISABLE_COPY(Material)
     friend class MaterialManager;
 
-    QOpenGLShaderProgram *program() const { return m_program; }
+    QOpenGLShaderProgramPtr program() const { return m_program; }
 private:
 
-    QOpenGLShaderProgram *m_program;
+    QOpenGLShaderProgramPtr m_program;
 
     void setAsDefault();
 };
 
-class MaterialManager : public OpenGLUser
+class MaterialManager : public OpenGLUser, public Singleton<MaterialManager>
 {
 public:
-    MaterialManager() {}
-    virtual ~MaterialManager() {}
-
-    virtual void initialize();
-    virtual void deinitialize();
+    MaterialManager();
+    virtual ~MaterialManager();
 
     Q_DISABLE_COPY(MaterialManager)
 
@@ -42,14 +41,24 @@ public:
     void setProjectionMatrix(const QMatrix4x4 &projectionMatrix);
     inline const QMatrix4x4 &projectionMatrix() const { return _projectionMatrix; }
 
-
-
 private:
     std::list<Material*> materials;
     Material *_defaultMaterial;
     QMatrix4x4 _projectionMatrix;
 
     friend class Renderer;
+};
+
+class ShaderManager : public OpenGLUser, public Singleton<ShaderManager>
+{
+public:
+    ShaderManager();
+    virtual ~ShaderManager();
+
+    inline QOpenGLShaderProgramPtr defaultShader() const { return _defaultShader; }
+
+private:
+    QOpenGLShaderProgram *_defaultShader{nullptr};
 };
 
 #endif // MATERIALMANAGER_H

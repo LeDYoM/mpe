@@ -2,6 +2,7 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLFunctions>
 #include "mpeapplication.h"
 #include "materialmanager.h"
 #include "log.h"
@@ -89,9 +90,35 @@ void RenderBuffer::create()
     DEBUG_MESSAGE(" RenderBuffer created with num elements: " << _numElements);
 }
 
-void RenderBuffer::create2(QOpenGLShaderProgram *shader)
+void RenderBuffer::create2(QOpenGLShaderProgram *program)
 {
+    DEBUG_MESSAGE("Creating RenderBuffer");
 
+    vao = new QOpenGLVertexArrayObject( );
+    vao->create();
+    vao->bind();
+
+    program->bind();
+
+    for (auto& item : _data)
+    {
+        DEBUG_MESSAGE("   Adding buffer" << item.first.c_str() << " with " << item.second->numElements() << " elements");
+        item.second->create();
+        item.second->bind();
+//        glFunctions()->glEnableVertexAttribArray();
+        program->enableAttributeArray( item.first.c_str() );
+        program->setAttributeBuffer( item.first.c_str(), GL_FLOAT, 0, item.second->tupleSize() , 0 );
+
+        int ne = item.second->numElements();
+        if (ne > _numElements)
+        {
+            _numElements = ne;
+        }
+    }
+
+    program->release();
+    vao->release();
+    DEBUG_MESSAGE(" RenderBuffer created with num elements: " << _numElements);
 }
 
 void RenderBuffer::release()

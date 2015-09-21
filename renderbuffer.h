@@ -43,7 +43,7 @@ public:
     void setIndicesBuffer(const std::vector<short> &indices);
     BufferData *getBuffer(const std::string name) const;
     void create();
-    void create2(QOpenGLShaderProgram *shader);
+    void create2(QOpenGLShaderProgram *program);
     void render();
     void release();
     void bind();
