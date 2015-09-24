@@ -18,6 +18,7 @@ void OpenGLUser::setContext(QOpenGLContext *context)
 
 void Renderer::render(Material *material, RenderBuffer *rBuffer)
 {
+    /*
     if (!rBuffer->vao)
         rBuffer->create();
 
@@ -37,18 +38,5 @@ void Renderer::render(Material *material, RenderBuffer *rBuffer)
     glFunctions()->glDrawArrays(GL_TRIANGLES, 0, rBuffer->_numElements);
     program->release();
     rBuffer->vao->release();
-}
-
-void Renderer::render2(Material *material, RenderBuffer *rBuffer)
-{
-    if (!rBuffer->vao)
-        rBuffer->create2(material->program());
-
-    rBuffer->vao->bind();
-    material->program()->bind();
-    material->program()->setUniformValue("matrix", *_projectionMatrix);
-    glFunctions()->glDrawArrays(GL_TRIANGLES, 0, rBuffer->_numElements);
-    material->program()->release();
-    rBuffer->vao->release();
-
+    */
 }

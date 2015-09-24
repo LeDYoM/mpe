@@ -19,7 +19,8 @@ MPEGLWidget::~MPEGLWidget()
     ShaderManager::destroy();
 }
 
-RenderBuffer *rBuffer;
+ptr<RenderBuffer> rBuffer;
+ptr<RenderObject> rObject{nullptr};
 
 void MPEGLWidget::initializeGL()
 {
@@ -44,14 +45,14 @@ void MPEGLWidget::initializeGL()
 
     f->glClearColor(1.0f, .0f, 1.0f, 1.0f);
 
-    rBuffer = new RenderBuffer();
+    rBuffer = createptr<RenderBuffer>();
 
-    rBuffer->addBuffer("colAttr",
+    rBuffer->setColorsBuffer(
         { Qt::red, Qt::green, Qt::blue,
           Qt::red, Qt::green, Qt::blue,
         });
 
-    rBuffer->addBuffer("posAttr", std::vector<QVector3D>
+    rBuffer->setPositionsBuffer(std::vector<QVector3D>
     {
         { -1.0f, -1.0f,  0.0f}, // v0
         {  1.0f, -1.0f,  0.0f}, // v1
@@ -63,6 +64,7 @@ void MPEGLWidget::initializeGL()
     });
 
 //    rBuffer->setIndicesBuffer(indices);
+
 }
 
 void MPEGLWidget::resizeGL(int w, int h)
@@ -89,10 +91,16 @@ void MPEGLWidget::paintGL()
     // Draw the scene:
     glFunctions()->glClear(GL_COLOR_BUFFER_BIT);
 
-    Renderer renderer;
+//    Renderer renderer;
     MaterialManager *materialManager = MaterialManager::GetInstance();
-    renderer.setProjectionMatrix(&m_projection);
-    renderer.render2(materialManager->defaultMaterial(),rBuffer);
+    if (!rObject)
+    {
+        rObject = createptr<RenderObject>(rBuffer,MaterialManager::GetInstance()->defaultMaterial());
+    }
+    //renderer.setProjectionMatrix(&m_projection);
+    //renderer.render2(materialManager->defaultMaterial(),rBuffer);
+    //RenderObject rObject(rBuffer,materialManager->defaultMaterial());
+    rObject->render(&m_projection);
     updateFps();
     update();
 }

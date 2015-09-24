@@ -23,4 +23,5 @@ HEADERS  += mainwindow.h \
     materialmanager.h \
     openglmanager.h \
     renderbuffer.h \
-    singleton.h
+    singleton.h \
+    memm.h

@@ -9,12 +9,17 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include <memory>
+#include "memm.h"
 
 class QOpenGLVertexArrayObject;
 class QOpenGLBuffer;
 class Material;
 class QOpenGLShaderProgram;
+
+enum class BufferDataType
+{
+
+};
 
 class BufferData
 {
@@ -37,40 +42,36 @@ class RenderBuffer : public OpenGLUser
 public:
     RenderBuffer();
     virtual ~RenderBuffer();
-    bool addBuffer(const std::string name, const std::vector<float> &data,int tupleSize);
-    bool addBuffer(const std::string name, const std::vector<QVector3D> &data);
-    bool addBuffer(const std::string name, const std::vector<QColor> &data);
-    void setIndicesBuffer(const std::vector<short> &indices);
-    BufferData *getBuffer(const std::string name) const;
-    void create();
-    void create2(QOpenGLShaderProgram *program);
-    void render();
-    void release();
-    void bind();
+    void setPositionsBuffer(const std::vector<QVector3D> &data);
+    void setColorsBuffer(const std::vector<QColor> &data);
+    void setColorsBuffer(const std::vector<QVector4D> &data);
+    void setColorsBuffer(const std::vector<QVector3D> &data);
+    void setNormalsBuffer(const std::vector<QVector3D> &data);
+    inline BufferData *positions() const { return _positionsBuffer; }
+    inline BufferData *colors() const { return _colorBuffer; }
+    inline BufferData *normals() const { return _normalsBuffer; }
+    inline int numElements() const { return _numElements; }
 
 private:
-    std::vector<short> indicesData;
-    QOpenGLVertexArrayObject *vao{nullptr};
-    QOpenGLBuffer *indicesBuffer{nullptr};
-    bool exists(const std::string &key_);
     int _numElements{0};
-    std::unordered_map<std::string,BufferData*> _data;
+    BufferData *_positionsBuffer{nullptr};
+    BufferData *_colorBuffer{nullptr};
+    BufferData *_normalsBuffer{nullptr};
 
     friend class Renderer;
 };
 
-class RenderBufferObject
+class RenderObject : public OpenGLUser
 {
 public:
-    inline RenderBufferObject(RenderBuffer *vdb,QOpenGLShaderProgram *sh):_vertexDataBuffer{vdb},_shader{sh} {}
-    virtual ~RenderBufferObject() {}
+    RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material);
+    virtual ~RenderObject();
 
-    void create();
+    void render(const QMatrix4x4 *projectionMatrix);
 private:
-    RenderBuffer *_vertexDataBuffer;
-    QOpenGLShaderProgram *_shader;
-    QOpenGLVertexArrayObject *vao{nullptr};
-    QVector<QOpenGLBuffer*> bufferData;
+    ptr<RenderBuffer> _rBuffer{nullptr};
+    ptr<Material> _material{nullptr};
+    ptr<QOpenGLVertexArrayObject> _vao{nullptr};
 };
 
 #endif // RENDERBUFFER_H

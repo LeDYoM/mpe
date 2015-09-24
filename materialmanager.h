@@ -4,10 +4,11 @@
 #include <list>
 #include "openglmanager.h"
 #include "singleton.h"
+#include "memm.h"
 #include <QMatrix4x4>
 
 class QOpenGLShaderProgram;
-using QOpenGLShaderProgramPtr = QOpenGLShaderProgram *;
+class Shader;
 
 class Material : public OpenGLUser
 {
@@ -15,16 +16,15 @@ public:
     Material();
     virtual ~Material();
 
-    void startMaterialRendering();
-    void endMaterialRendering();
-
     Q_DISABLE_COPY(Material)
     friend class MaterialManager;
+    void bind();
+    void release();
 
-    QOpenGLShaderProgramPtr program() const { return m_program; }
+    ptr<Shader> shader() const { return _shader; }
 private:
 
-    QOpenGLShaderProgramPtr m_program;
+    ptr<Shader> _shader;
 
     void setAsDefault();
 };
@@ -37,16 +37,38 @@ public:
 
     Q_DISABLE_COPY(MaterialManager)
 
-    inline Material *defaultMaterial() const { return _defaultMaterial; }
+    inline ptr<Material> defaultMaterial() const { return _defaultMaterial; }
     void setProjectionMatrix(const QMatrix4x4 &projectionMatrix);
     inline const QMatrix4x4 &projectionMatrix() const { return _projectionMatrix; }
+    void setActiveMaterial(ptr<Material> material);
+    void releaseActiveMaterial();
 
 private:
-    std::list<Material*> materials;
-    Material *_defaultMaterial;
+    std::list<ptr<Material>> materials;
+    ptr<Material> _defaultMaterial{nullptr};
     QMatrix4x4 _projectionMatrix;
 
+    ptr<Material> _activeRenderMaterial{nullptr};
+
     friend class Renderer;
+};
+
+class Shader : public OpenGLUser
+{
+public:
+    Shader(ptr<QOpenGLShaderProgram> program);
+    virtual ~Shader();
+    inline int positionAttributeIndex() const { return _positionAttributeIndex; }
+    inline int colorAttributeIndex() const { return _colorAttributeIndex; }
+    inline int normalAttributeIndex() const { return _normalAttributeIndex; }
+    inline ptr<QOpenGLShaderProgram> program() const { return _program; }
+
+private:
+    int _positionAttributeIndex{0};
+    int _colorAttributeIndex{1};
+    int _normalAttributeIndex{2};
+    ptr<QOpenGLShaderProgram> _program{nullptr};
+
 };
 
 class ShaderManager : public OpenGLUser, public Singleton<ShaderManager>
@@ -55,10 +77,17 @@ public:
     ShaderManager();
     virtual ~ShaderManager();
 
-    inline QOpenGLShaderProgramPtr defaultShader() const { return _defaultShader; }
+    inline ptr<Shader> defaultShader() const { return _defaultShader; }
+    bool addShader(const char *name,const char *vertexCode,const char *fragmentCode);
+
+    void setCurrentActiveShader(ptr<Shader> shader);
+    void unsetShader();
+
+    inline ptr<Shader> activeShader() const { return currentActiveShader; }
 
 private:
-    QOpenGLShaderProgram *_defaultShader{nullptr};
+    ptr<Shader> _defaultShader{nullptr};
+    ptr<Shader> currentActiveShader{nullptr};
 };
 
 #endif // MATERIALMANAGER_H
