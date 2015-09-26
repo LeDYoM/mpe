@@ -222,6 +222,8 @@ RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
 RenderObject::~RenderObject()
 {
     DEBUG_MESSAGE("Destroying RenderObject");
+    if (_vao)
+        _vao->release();
 }
 
 void RenderObject::render(const QMatrix4x4 *projectionMatrix)
@@ -239,7 +241,8 @@ void RenderObject::render(const QMatrix4x4 *projectionMatrix)
 
 AttributeBinder::~AttributeBinder()
 {
-    buffer->release();
+    if (buffer)
+        buffer->release();
 }
 
 AttributeBinder::AttributeBinder(ptr<BufferData> data, ptr<Shader> shader, int index)
