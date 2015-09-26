@@ -24,4 +24,5 @@ HEADERS  += mainwindow.h \
     openglmanager.h \
     renderbuffer.h \
     singleton.h \
-    memm.h
+    memm.h \
+    buffertype.h

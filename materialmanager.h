@@ -6,6 +6,7 @@
 #include "singleton.h"
 #include "memm.h"
 #include <QMatrix4x4>
+#include "buffertype.h"
 
 class QOpenGLShaderProgram;
 class Shader;
@@ -49,8 +50,6 @@ private:
     QMatrix4x4 _projectionMatrix;
 
     ptr<Material> _activeRenderMaterial{nullptr};
-
-    friend class Renderer;
 };
 
 class Shader : public OpenGLUser
@@ -58,15 +57,11 @@ class Shader : public OpenGLUser
 public:
     Shader(ptr<QOpenGLShaderProgram> program);
     virtual ~Shader();
-    inline int positionAttributeIndex() const { return _positionAttributeIndex; }
-    inline int colorAttributeIndex() const { return _colorAttributeIndex; }
-    inline int normalAttributeIndex() const { return _normalAttributeIndex; }
+    inline int getAttributeIndex(BufferType bf) const { return attributeIndices[bf]; }
     inline ptr<QOpenGLShaderProgram> program() const { return _program; }
 
 private:
-    int _positionAttributeIndex{0};
-    int _colorAttributeIndex{1};
-    int _normalAttributeIndex{2};
+    std::vector<int> attributeIndices= {0,1,2};
     ptr<QOpenGLShaderProgram> _program{nullptr};
 
 };

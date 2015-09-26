@@ -91,15 +91,11 @@ void MPEGLWidget::paintGL()
     // Draw the scene:
     glFunctions()->glClear(GL_COLOR_BUFFER_BIT);
 
-//    Renderer renderer;
     MaterialManager *materialManager = MaterialManager::GetInstance();
     if (!rObject)
     {
         rObject = createptr<RenderObject>(rBuffer,MaterialManager::GetInstance()->defaultMaterial());
     }
-    //renderer.setProjectionMatrix(&m_projection);
-    //renderer.render2(materialManager->defaultMaterial(),rBuffer);
-    //RenderObject rObject(rBuffer,materialManager->defaultMaterial());
     rObject->render(&m_projection);
     updateFps();
     update();

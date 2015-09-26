@@ -57,33 +57,32 @@ static std::vector<float> fromVQC(const std::vector<QColor> &data)
 
 void RenderBuffer::setPositionsBuffer(const std::vector<QVector3D> &data)
 {
-    _positionsBuffer = new BufferData(3);
-    _positionsBuffer->setData(fromVQ3(data));
-    _numElements = data.size();
+    setBuffer(BufferType::Positions,fromVQ3(data),3);
 }
 
 void RenderBuffer::setColorsBuffer(const std::vector<QColor> &data)
 {
-    _colorBuffer = new BufferData(4);
-    _colorBuffer->setData(fromVQC(data));
+    setBuffer(BufferType::Colors,fromVQC(data),4);
 }
 
 void RenderBuffer::setColorsBuffer(const std::vector<QVector4D> &data)
 {
-    _colorBuffer = new BufferData(4);
-    _colorBuffer->setData(fromVQ4(data));
+    setBuffer(BufferType::Colors,fromVQ4(data),4);
 }
 
 void RenderBuffer::setColorsBuffer(const std::vector<QVector3D> &data)
 {
-    _colorBuffer = new BufferData(3);
-    _colorBuffer->setData(fromVQ3(data));
+    setBuffer(BufferType::Colors,fromVQ3(data),3);
 }
 
 void RenderBuffer::setNormalsBuffer(const std::vector<QVector3D> &data)
 {
-    _normalsBuffer = new BufferData(3);
-    _normalsBuffer->setData(fromVQ3(data));
+    setBuffer(BufferType::Normals,fromVQ3(data),3);
+}
+
+void RenderBuffer::setBuffer(BufferType type, const std::vector<float> &data,int tupleSize)
+{
+    buffers[(int)type] = createptr<BufferData>(tupleSize,data);
 }
 
 /*
@@ -155,22 +154,7 @@ void RenderBuffer::create()
 }
 */
 
-void BufferData::setData(const std::vector<float> &data)
-{
-    _data = data;
-}
-
-void BufferData::setData(const float *data, int size)
-{
-    std::vector<float> temp(size);
-    for (int i=0;i<size;++i)
-    {
-        temp.push_back(data[i]);
-    }
-
-    setData(temp);
-}
-
+/*
 void BufferData::create()
 {
     buffer = new QOpenGLBuffer();
@@ -179,11 +163,7 @@ void BufferData::create()
     buffer->bind();
     buffer->allocate( &(_data[0]), _data.size() * sizeof(float) );
 }
-
-void BufferData::bind()
-{
-    buffer->bind();
-}
+*/
 
 
 RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
@@ -199,6 +179,12 @@ RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
 
     _material->shader()->program()->bind();
 
+    for (int i=0;i<(int)BufferType::InternalBufferCount;++i)
+    {
+        bindings.push_back(createptr<AttributeBinder>(_rBuffer->getBuffer((BufferType)i),_material->shader(),i));
+    }
+
+    /*
     _rBuffer->positions()->create();
     _rBuffer->positions()->bind();
     _material->shader()->program()->enableAttributeArray(_material->shader()->positionAttributeIndex());
@@ -210,7 +196,7 @@ RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
     _material->shader()->program()->enableAttributeArray(_material->shader()->colorAttributeIndex());
     _material->shader()->program()->setAttributeBuffer(_material->shader()->colorAttributeIndex(),
                                                        GL_FLOAT, 0, _rBuffer->colors()->tupleSize() , 0);
-
+*/
     /*
     for (auto& item : _data)
     {
@@ -235,27 +221,43 @@ RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
 
 RenderObject::~RenderObject()
 {
-
+    DEBUG_MESSAGE("Destroying RenderObject");
 }
 
 void RenderObject::render(const QMatrix4x4 *projectionMatrix)
 {
-//    if (!_vao)
-//        rBuffer->create();
-
     _vao->bind();
     ptr<QOpenGLShaderProgram> program = _material->shader()->program();
     program->bind();
     program->setUniformValue("matrix", *projectionMatrix);
-/*
-    for (auto& item : rBuffer->_data)
-    {
-        item.second->bind();
-        material->program()->enableAttributeArray( item.first.c_str() );
-        material->program()->setAttributeBuffer( item.first.c_str(), GL_FLOAT, 0, item.second->tupleSize() , 0 );
-    }
-*/
-    glFunctions()->glDrawArrays(GL_TRIANGLES, 0, _rBuffer->numElements());
+
+    glFunctions()->glDrawArrays(GL_TRIANGLES, 0, _rBuffer->getBuffer(BufferType::Positions)->numElements());
     program->release();
     _vao->release();
+}
+
+
+AttributeBinder::~AttributeBinder()
+{
+    buffer->release();
+}
+
+AttributeBinder::AttributeBinder(ptr<BufferData> data, ptr<Shader> shader, int index)
+{
+    Q_ASSERT(shader);
+    if (data)
+    {
+        buffer = createptr<QOpenGLBuffer>();
+        buffer->setUsagePattern( QOpenGLBuffer::StaticDraw );
+        buffer->create();
+        buffer->bind();
+        Q_ASSERT(data->data().size()>0);
+        buffer->allocate( &(data->data()[0]), data->data().size() * sizeof(float) );
+        shader->program()->enableAttributeArray( index );
+        shader->program()->setAttributeBuffer( index, GL_FLOAT, 0, data->tupleSize() , 0 );
+    }
+    else
+    {
+        shader->program()->disableAttributeArray( index );
+    }
 }

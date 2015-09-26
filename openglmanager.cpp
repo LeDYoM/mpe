@@ -16,8 +16,6 @@ void OpenGLUser::setContext(QOpenGLContext *context)
     _openGLFunctions = _context->functions();
 }
 
-void Renderer::render(Material *material, RenderBuffer *rBuffer)
-{
     /*
     if (!rBuffer->vao)
         rBuffer->create();
@@ -39,4 +37,3 @@ void Renderer::render(Material *material, RenderBuffer *rBuffer)
     program->release();
     rBuffer->vao->release();
     */
-}

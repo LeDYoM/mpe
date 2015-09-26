@@ -10,31 +10,23 @@
 #include <string>
 #include <vector>
 #include "memm.h"
+#include "buffertype.h"
 
 class QOpenGLVertexArrayObject;
 class QOpenGLBuffer;
 class Material;
 class QOpenGLShaderProgram;
 
-enum class BufferDataType
-{
-
-};
-
 class BufferData
 {
 public:
-    inline BufferData(int tupleSize):_tupleSize{tupleSize} { }
-    void setData(const std::vector<float> &data);
-    void setData(const float *data,int size);
-    void create();
-    void bind();
+    inline BufferData(int tupleSize,const std::vector<float> &data):_tupleSize{tupleSize},_data{data} { }
     inline int tupleSize() const { return _tupleSize; }
     inline int numElements() const { return _data.size() / _tupleSize; }
+    inline const std::vector<float> &data() const { return _data; }
 private:
-    QOpenGLBuffer *buffer;
-    std::vector<float> _data;
     int _tupleSize;
+    std::vector<float> _data;
 };
 
 class RenderBuffer : public OpenGLUser
@@ -47,18 +39,27 @@ public:
     void setColorsBuffer(const std::vector<QVector4D> &data);
     void setColorsBuffer(const std::vector<QVector3D> &data);
     void setNormalsBuffer(const std::vector<QVector3D> &data);
-    inline BufferData *positions() const { return _positionsBuffer; }
-    inline BufferData *colors() const { return _colorBuffer; }
-    inline BufferData *normals() const { return _normalsBuffer; }
-    inline int numElements() const { return _numElements; }
+    void setBuffer(BufferType type, const std::vector<float> &data,int tupleSize);
+    /*
+    inline const std::vector<float> &positions() const { return buffers[BufferType::Positions]; }
+    inline const std::vector<float> &colors() const { return buffers[BufferType::Colors]; }
+    inline const std::vector<float> &normals() const { return buffers[BufferType::Normals]; }
+    */
+    inline ptr<BufferData> getBuffer(BufferType bt) const { return buffers[bt]; }
 
 private:
-    int _numElements{0};
-    BufferData *_positionsBuffer{nullptr};
-    BufferData *_colorBuffer{nullptr};
-    BufferData *_normalsBuffer{nullptr};
+    std::vector<ptr<BufferData>> buffers{(size_t)(BufferType::InternalBufferCount)};
+};
 
-    friend class Renderer;
+class Shader;
+
+class AttributeBinder : public OpenGLUser
+{
+public:
+    AttributeBinder(ptr<BufferData> data,ptr<Shader> shader ,int index);
+    virtual ~AttributeBinder();
+private:
+    ptr<QOpenGLBuffer> buffer{nullptr};
 };
 
 class RenderObject : public OpenGLUser
@@ -69,6 +70,7 @@ public:
 
     void render(const QMatrix4x4 *projectionMatrix);
 private:
+    std::vector<ptr<AttributeBinder>> bindings;
     ptr<RenderBuffer> _rBuffer{nullptr};
     ptr<Material> _material{nullptr};
     ptr<QOpenGLVertexArrayObject> _vao{nullptr};
