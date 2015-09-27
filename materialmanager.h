@@ -58,8 +58,14 @@ public:
     Shader(ptr<QOpenGLShaderProgram> program);
     virtual ~Shader();
     inline int getAttributeIndex(BufferType bf) const { return attributeIndices[bf]; }
-    inline ptr<QOpenGLShaderProgram> program() const { return _program; }
+//    inline ptr<QOpenGLShaderProgram> program() const { return _program; }
 
+    void enableAttributeAndSetBuffer(BufferType bufferType,int tupleSize);
+    void enableAttribute(BufferType bufferType);
+    void disableAttribute(BufferType bufferType);
+    void setProjectionMatrix(const QMatrix4x4 *pMatrix);
+    void bind();
+    void release();
 private:
     std::vector<int> attributeIndices= {0,1,2};
     ptr<QOpenGLShaderProgram> _program{nullptr};

@@ -85,7 +85,7 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
-    _defaultShader->program()->release();
+    _defaultShader->release();
 }
 
 bool ShaderManager::addShader(const char *name, const char *vertexCode, const char *fragmentCode)
@@ -102,14 +102,14 @@ bool ShaderManager::addShader(const char *name, const char *vertexCode, const ch
 void ShaderManager::setCurrentActiveShader(ptr<Shader> shader)
 {
     currentActiveShader = shader;
-    currentActiveShader->program()->bind();
+    currentActiveShader->bind();
 }
 
 void ShaderManager::unsetShader()
 {
     if (currentActiveShader)
     {
-        currentActiveShader->program()->release();
+        currentActiveShader->release();
     }
 }
 
@@ -123,5 +123,39 @@ Shader::Shader(ptr<QOpenGLShaderProgram> program)
 
 Shader::~Shader()
 {
+    if (_program)
+    {
+        _program->release();
+    }
+}
 
+void Shader::enableAttributeAndSetBuffer(BufferType bufferType, int tupleSize)
+{
+    enableAttribute(bufferType);
+    _program->setAttributeBuffer( (int)bufferType, GL_FLOAT, 0, tupleSize , 0 );
+}
+
+void Shader::enableAttribute(BufferType bufferType)
+{
+    _program->enableAttributeArray( (int)bufferType );
+}
+
+void Shader::disableAttribute(BufferType bufferType)
+{
+    _program->disableAttributeArray((int)bufferType);
+}
+
+void Shader::setProjectionMatrix(const QMatrix4x4 *pMatrix)
+{
+    _program->setUniformValue("matrix",*pMatrix);
+}
+
+void Shader::bind()
+{
+    _program->bind();
+}
+
+void Shader::release()
+{
+    _program->release();
 }

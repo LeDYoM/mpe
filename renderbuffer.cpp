@@ -7,9 +7,8 @@
 #include "materialmanager.h"
 #include "log.h"
 
-RenderBuffer::RenderBuffer():OpenGLUser()
+RenderBuffer::RenderBuffer()
 {
-    //setMaterial(mpeApp->materialManager()->defaultMaterial());
 }
 
 RenderBuffer::~RenderBuffer()
@@ -177,46 +176,16 @@ RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
     _vao->create();
     _vao->bind();
 
-    _material->shader()->program()->bind();
-
+    _material->shader()->bind();
+    _vertexCount = _rBuffer->getBuffer(BufferType::Positions)->numElements();
     for (int i=0;i<(int)BufferType::InternalBufferCount;++i)
     {
-        bindings.push_back(createptr<AttributeBinder>(_rBuffer->getBuffer((BufferType)i),_material->shader(),i));
+        bindings.push_back(createptr<AttributeBinder>(_rBuffer->getBuffer((BufferType)i),_material->shader(),(BufferType)i));
     }
 
-    /*
-    _rBuffer->positions()->create();
-    _rBuffer->positions()->bind();
-    _material->shader()->program()->enableAttributeArray(_material->shader()->positionAttributeIndex());
-    _material->shader()->program()->setAttributeBuffer(_material->shader()->positionAttributeIndex(),
-                                                       GL_FLOAT, 0, _rBuffer->positions()->tupleSize() , 0);
-
-    _rBuffer->colors()->create();
-    _rBuffer->colors()->bind();
-    _material->shader()->program()->enableAttributeArray(_material->shader()->colorAttributeIndex());
-    _material->shader()->program()->setAttributeBuffer(_material->shader()->colorAttributeIndex(),
-                                                       GL_FLOAT, 0, _rBuffer->colors()->tupleSize() , 0);
-*/
-    /*
-    for (auto& item : _data)
-    {
-        DEBUG_MESSAGE("   Adding buffer" << item.first.c_str() << " with " << item.second->numElements() << " elements");
-        item.second->create();
-        item.second->bind();
-        program->enableAttributeArray( item.first.c_str() );
-        program->setAttributeBuffer( item.first.c_str(), GL_FLOAT, 0, item.second->tupleSize() , 0 );
-
-        int ne = item.second->numElements();
-        if (ne > _numElements)
-        {
-            _numElements = ne;
-        }
-    }
-*/
-    _material->shader()->program()->release();
+    _material->shader()->release();
     _vao->release();
     DEBUG_MESSAGE(" RenderObject created");
-
 }
 
 RenderObject::~RenderObject()
@@ -229,12 +198,12 @@ RenderObject::~RenderObject()
 void RenderObject::render(const QMatrix4x4 *projectionMatrix)
 {
     _vao->bind();
-    ptr<QOpenGLShaderProgram> program = _material->shader()->program();
-    program->bind();
-    program->setUniformValue("matrix", *projectionMatrix);
+    ptr<Shader> shader = _material->shader();
+    shader->bind();
+    shader->setProjectionMatrix(projectionMatrix);
 
-    glFunctions()->glDrawArrays(GL_TRIANGLES, 0, _rBuffer->getBuffer(BufferType::Positions)->numElements());
-    program->release();
+    glFunctions()->glDrawArrays(GL_TRIANGLES, 0, _vertexCount);
+    shader->release();
     _vao->release();
 }
 
@@ -245,7 +214,7 @@ AttributeBinder::~AttributeBinder()
         buffer->release();
 }
 
-AttributeBinder::AttributeBinder(ptr<BufferData> data, ptr<Shader> shader, int index)
+AttributeBinder::AttributeBinder(ptr<BufferData> data, ptr<Shader> shader, BufferType bufferType)
 {
     Q_ASSERT(shader);
     if (data)
@@ -256,11 +225,10 @@ AttributeBinder::AttributeBinder(ptr<BufferData> data, ptr<Shader> shader, int i
         buffer->bind();
         Q_ASSERT(data->data().size()>0);
         buffer->allocate( &(data->data()[0]), data->data().size() * sizeof(float) );
-        shader->program()->enableAttributeArray( index );
-        shader->program()->setAttributeBuffer( index, GL_FLOAT, 0, data->tupleSize() , 0 );
+        shader->enableAttributeAndSetBuffer(bufferType,data->tupleSize());
     }
     else
     {
-        shader->program()->disableAttributeArray( index );
+        shader->disableAttribute(bufferType);
     }
 }

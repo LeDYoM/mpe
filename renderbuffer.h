@@ -29,7 +29,7 @@ private:
     std::vector<float> _data;
 };
 
-class RenderBuffer : public OpenGLUser
+class RenderBuffer
 {
 public:
     RenderBuffer();
@@ -40,11 +40,6 @@ public:
     void setColorsBuffer(const std::vector<QVector3D> &data);
     void setNormalsBuffer(const std::vector<QVector3D> &data);
     void setBuffer(BufferType type, const std::vector<float> &data,int tupleSize);
-    /*
-    inline const std::vector<float> &positions() const { return buffers[BufferType::Positions]; }
-    inline const std::vector<float> &colors() const { return buffers[BufferType::Colors]; }
-    inline const std::vector<float> &normals() const { return buffers[BufferType::Normals]; }
-    */
     inline ptr<BufferData> getBuffer(BufferType bt) const { return buffers[bt]; }
 
 private:
@@ -56,7 +51,7 @@ class Shader;
 class AttributeBinder : public OpenGLUser
 {
 public:
-    AttributeBinder(ptr<BufferData> data,ptr<Shader> shader ,int index);
+    AttributeBinder(ptr<BufferData> data,ptr<Shader> shader ,BufferType bufferType);
     virtual ~AttributeBinder();
 private:
     ptr<QOpenGLBuffer> buffer{nullptr};
@@ -74,6 +69,7 @@ private:
     ptr<RenderBuffer> _rBuffer{nullptr};
     ptr<Material> _material{nullptr};
     ptr<QOpenGLVertexArrayObject> _vao{nullptr};
+    int _vertexCount{0};
 };
 
 #endif // RENDERBUFFER_H
