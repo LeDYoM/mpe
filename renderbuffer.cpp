@@ -84,87 +84,6 @@ void RenderBuffer::setBuffer(BufferType type, const std::vector<float> &data,int
     buffers[(int)type] = createptr<BufferData>(tupleSize,data);
 }
 
-/*
-bool RenderBuffer::addBuffer(const std::string name, const std::vector<float> &data,int tupleSize)
-{
-    if (!exists(name))
-    {
-        _data[name] = new BufferData(tupleSize);
-        _data[name]->setData(data);
-        return true;
-    }
-    return false;
-}
-
-bool RenderBuffer::addBuffer(const std::string name, const std::vector<QVector3D> &data)
-{
-    std::vector<float> temp;
-    for (const QVector3D &v : data)
-    {
-        temp.push_back(v.x());
-        temp.push_back(v.y());
-        temp.push_back(v.z());
-    }
-
-    return addBuffer(name,temp,3);
-}
-
-bool RenderBuffer::addBuffer(const std::string name, const std::vector<QColor> &data)
-{
-    std::vector<float> temp;
-    for (const QColor &v : data)
-    {
-        temp.push_back(v.redF());
-        temp.push_back(v.greenF());
-        temp.push_back(v.blueF());
-        temp.push_back(v.alphaF());
-    }
-
-    return addBuffer(name,temp,4);
-}
-
-BufferData *RenderBuffer::getBuffer(const std::string index) const
-{
-    return (*(_data.find(index))).second;
-}
-
-
-void RenderBuffer::create()
-{
-    DEBUG_MESSAGE("Creating RenderBuffer");
-
-    vao = new QOpenGLVertexArrayObject( );
-    vao->create();
-    vao->bind();
-
-    for (auto& item : _data)
-    {
-        DEBUG_MESSAGE("   Adding buffer" << item.first.c_str() << " with " << item.second->numElements() << " elements");
-        item.second->create();
-        int ne = item.second->numElements();
-        if (ne > _numElements)
-        {
-            _numElements = ne;
-        }
-    }
-
-    vao->release();
-    DEBUG_MESSAGE(" RenderBuffer created with num elements: " << _numElements);
-}
-*/
-
-/*
-void BufferData::create()
-{
-    buffer = new QOpenGLBuffer();
-    buffer->setUsagePattern( QOpenGLBuffer::StaticDraw );
-    buffer->create();
-    buffer->bind();
-    buffer->allocate( &(_data[0]), _data.size() * sizeof(float) );
-}
-*/
-
-
 RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
 {
     _rBuffer = rBuffer;
@@ -197,8 +116,8 @@ RenderObject::~RenderObject()
 
 void RenderObject::render(const QMatrix4x4 *projectionMatrix)
 {
-    _vao->bind();
     ptr<Shader> shader = _material->shader();
+    _vao->bind();
     shader->bind();
     shader->setProjectionMatrix(projectionMatrix);
 
