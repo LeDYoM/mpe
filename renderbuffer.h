@@ -1,12 +1,10 @@
 #ifndef RENDERBUFFER_H
 #define RENDERBUFFER_H
 
-#include "opengluser.h"
-
 #include <QVector3D>
+#include <QVector4D>
 #include <QColor>
 
-#include <unordered_map>
 #include <string>
 #include <vector>
 #include "memm.h"
@@ -44,32 +42,6 @@ public:
 
 private:
     std::vector<ptr<BufferData>> buffers{(size_t)(BufferType::InternalBufferCount)};
-};
-
-class Shader;
-
-class AttributeBinder : public OpenGLUser
-{
-public:
-    AttributeBinder(ptr<BufferData> data,ptr<Shader> shader ,BufferType bufferType);
-    virtual ~AttributeBinder();
-private:
-    ptr<QOpenGLBuffer> buffer{nullptr};
-};
-
-class RenderObject : public OpenGLUser
-{
-public:
-    RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material);
-    virtual ~RenderObject();
-
-    void render(const QMatrix4x4 *projectionMatrix);
-private:
-    std::vector<ptr<AttributeBinder>> bindings;
-    ptr<RenderBuffer> _rBuffer{nullptr};
-    ptr<Material> _material{nullptr};
-    ptr<QOpenGLVertexArrayObject> _vao{nullptr};
-    int _vertexCount{0};
 };
 
 #endif // RENDERBUFFER_H

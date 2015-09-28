@@ -4,6 +4,7 @@
 #include "renderbuffer.h"
 #include "materialmanager.h"
 #include "shadermanager.h"
+#include "renderobject.h"
 #include <QOpenGLFunctions>
 
 MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)

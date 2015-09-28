@@ -15,7 +15,8 @@ SOURCES += main.cpp\
     materialmanager.cpp \
     renderbuffer.cpp \
     opengluser.cpp \
-    shadermanager.cpp
+    shadermanager.cpp \
+    renderobject.cpp
 
 HEADERS  += mainwindow.h \
     mpeapplication.h \
@@ -28,4 +29,5 @@ HEADERS  += mainwindow.h \
     buffertype.h \
     opengluser.h \
     shadermanager.h \
-    globalwrapperh.h
+    globalwrapperh.h \
+    renderobject.h
