@@ -13,16 +13,16 @@ SOURCES += main.cpp\
     mpeapplication.cpp \
     mpeglwidget.cpp \
     materialmanager.cpp \
-    openglmanager.cpp \
-    renderbuffer.cpp
+    renderbuffer.cpp \
+    opengluser.cpp
 
 HEADERS  += mainwindow.h \
     mpeapplication.h \
     mpeglwidget.h \
     log.h \
     materialmanager.h \
-    openglmanager.h \
     renderbuffer.h \
     singleton.h \
     memm.h \
-    buffertype.h
+    buffertype.h \
+    opengluser.h

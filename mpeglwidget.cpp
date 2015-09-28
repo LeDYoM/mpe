@@ -1,6 +1,6 @@
 #include "mpeglwidget.h"
 #include "log.h"
-#include "openglmanager.h"
+#include "opengluser.h"
 #include "renderbuffer.h"
 #include "materialmanager.h"
 #include <QOpenGLFunctions>
@@ -8,8 +8,8 @@
 MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
     QSurfaceFormat fmt(QSurfaceFormat::defaultFormat());
-//    fmt.setVersion(4,0);
-//    fmt.setProfile(QSurfaceFormat::CoreProfile);
+    fmt.setVersion(4,0);
+    fmt.setProfile(QSurfaceFormat::CoreProfile);
     setFormat(fmt);
 }
 

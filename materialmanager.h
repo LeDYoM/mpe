@@ -2,7 +2,7 @@
 #define MATERIALMANAGER_H
 
 #include <list>
-#include "openglmanager.h"
+#include "opengluser.h"
 #include "singleton.h"
 #include "memm.h"
 #include <QMatrix4x4>

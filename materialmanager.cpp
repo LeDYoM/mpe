@@ -6,10 +6,10 @@
 #include "mpeapplication.h"
 
 static const char *vertexShaderSource =
-    "in vec4 posAttr;\n"
-    "in vec4 colAttr;\n"
+    "in lowp vec4 posAttr;\n"
+    "in lowp vec4 colAttr;\n"
     "varying lowp vec4 col;\n"
-    "uniform highp mat4 matrix;\n"
+    "uniform lowp mat4 matrix;\n"
     "void main() {\n"
     "   col = colAttr;\n"
     "   gl_Position = matrix * posAttr;\n"

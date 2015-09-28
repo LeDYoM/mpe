@@ -1,12 +1,8 @@
-#ifndef OPENGLMANAGER_H
-#define OPENGLMANAGER_H
-
-#include <QMatrix4x4>
+#ifndef OPENGLUSER_H
+#define OPENGLUSER_H
 
 class QOpenGLContext;
 class QOpenGLFunctions;
-class RenderBuffer;
-class Material;
 
 class OpenGLUser
 {
@@ -22,4 +18,4 @@ private:
     static QOpenGLFunctions *_openGLFunctions;
 };
 
-#endif // OPENGLMANAGER_H
+#endif // OPENGLUSER_H

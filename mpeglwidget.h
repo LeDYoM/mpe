@@ -5,7 +5,7 @@
 #include <QMatrix4x4>
 #include <QTimer>
 
-#include "openglmanager.h"
+#include "opengluser.h"
 
 class MaterialManager;
 

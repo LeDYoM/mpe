@@ -1,7 +1,7 @@
 #ifndef RENDERBUFFER_H
 #define RENDERBUFFER_H
 
-#include "openglmanager.h"
+#include "opengluser.h"
 
 #include <QVector3D>
 #include <QColor>

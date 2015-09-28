@@ -1,4 +1,4 @@
-#include "openglmanager.h"
+#include "opengluser.h"
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 
