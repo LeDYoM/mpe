@@ -14,7 +14,8 @@ SOURCES += main.cpp\
     mpeglwidget.cpp \
     materialmanager.cpp \
     renderbuffer.cpp \
-    opengluser.cpp
+    opengluser.cpp \
+    shadermanager.cpp
 
 HEADERS  += mainwindow.h \
     mpeapplication.h \
@@ -25,4 +26,6 @@ HEADERS  += mainwindow.h \
     singleton.h \
     memm.h \
     buffertype.h \
-    opengluser.h
+    opengluser.h \
+    shadermanager.h \
+    globalwrapperh.h

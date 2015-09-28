@@ -3,6 +3,7 @@
 #include "opengluser.h"
 #include "renderbuffer.h"
 #include "materialmanager.h"
+#include "shadermanager.h"
 #include <QOpenGLFunctions>
 
 MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)

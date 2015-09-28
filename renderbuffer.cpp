@@ -1,11 +1,11 @@
 #include "renderbuffer.h"
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
-#include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions>
 #include "mpeapplication.h"
 #include "materialmanager.h"
 #include "log.h"
+#include "shadermanager.h"
 
 RenderBuffer::RenderBuffer()
 {
