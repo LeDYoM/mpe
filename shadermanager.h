@@ -37,6 +37,7 @@ public:
 
     inline ptr<Shader> defaultShader() const { return _defaultShader; }
     bool addShader(const char *name,const char *vertexCode,const char *fragmentCode);
+    bool addShaderFromFile(const char *name,const char *vsFile,const char *fsFile);
 
     void setCurrentActiveShader(ptr<Shader> shader);
     void unsetShader();

@@ -13,6 +13,7 @@ class RenderBuffer;
 class Material;
 class QMatrix4x4;
 class QOpenGLVertexArrayObject;
+class QOpenGLShaderProgram;
 
 class AttributeBinder : public OpenGLUser
 {
@@ -31,10 +32,11 @@ public:
 
     void render(const QMatrix4x4 *projectionMatrix);
 private:
-    std::vector<ptr<AttributeBinder>> bindings;
     ptr<RenderBuffer> _rBuffer{nullptr};
     ptr<Material> _material{nullptr};
+    std::vector<ptr<AttributeBinder>> bindings;
     ptr<QOpenGLVertexArrayObject> _vao{nullptr};
+    ptr<QOpenGLShaderProgram> _shaderProgram;
     int _vertexCount{0};
 };
 

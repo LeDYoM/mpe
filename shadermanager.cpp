@@ -19,7 +19,8 @@ static const char *fragmentShaderSource =
 
 ShaderManager::ShaderManager()
 {
-    addShader("default",vertexShaderSource,fragmentShaderSource);
+//    addShader("default",vertexShaderSource,fragmentShaderSource);
+      addShaderFromFile("default",":/standard.vert",":/standard.frag");
 }
 
 ShaderManager::~ShaderManager()
@@ -33,6 +34,17 @@ bool ShaderManager::addShader(const char *name, const char *vertexCode, const ch
     ptr<QOpenGLShaderProgram> temp = createptr<QOpenGLShaderProgram>();
     temp->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexCode);
     temp->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentCode);
+    temp->link();
+    _defaultShader = createptr<Shader>(temp);
+    return true;
+}
+
+bool ShaderManager::addShaderFromFile(const char *name, const char *vsFile, const char *fsFile)
+{
+    Q_UNUSED(name);
+    ptr<QOpenGLShaderProgram> temp = createptr<QOpenGLShaderProgram>();
+    temp->addShaderFromSourceFile(QOpenGLShader::Vertex, vsFile);
+    temp->addShaderFromSourceFile(QOpenGLShader::Fragment, fsFile);
     temp->link();
     _defaultShader = createptr<Shader>(temp);
     return true;

@@ -10,17 +10,16 @@
 
 RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
 {
+    DEBUG_MESSAGE("Creating RenderObject");
     _rBuffer = rBuffer;
     _material = material;
-
-    DEBUG_MESSAGE("Creating RenderObject");
 
     _vao = createptr<QOpenGLVertexArrayObject>( );
     _vao->create();
     _vao->bind();
 
     _material->shader()->bind();
-    _vertexCount = _rBuffer->getBuffer(BufferType::Positions)->numElements();
+    _vertexCount = rBuffer->getBuffer(BufferType::Positions)->numElements();
     for (int i=0;i<(int)BufferType::InternalBufferCount;++i)
     {
         bindings.push_back(createptr<AttributeBinder>(_rBuffer->getBuffer((BufferType)i),_material->shader(),(BufferType)i));
@@ -40,7 +39,7 @@ RenderObject::~RenderObject()
 
 void RenderObject::render(const QMatrix4x4 *projectionMatrix)
 {
-    ptr<Shader> shader = _material->shader();
+    Shader *shader = _material->shader().get();
     _vao->bind();
     shader->bind();
     shader->setProjectionMatrix(projectionMatrix);
