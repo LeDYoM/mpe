@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     opengluser.cpp \
     shadermanager.cpp \
     renderobject.cpp \
-    texturemanager.cpp
+    texturemanager.cpp \
+    geometrycreator.cpp
 
 HEADERS  += mainwindow.h \
     mpeapplication.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     shadermanager.h \
     globalwrapperh.h \
     renderobject.h \
-    texturemanager.h
+    texturemanager.h \
+    geometrycreator.h
 
 RESOURCES += \
     resources.qrc

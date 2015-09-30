@@ -5,6 +5,7 @@
 #include "materialmanager.h"
 #include "shadermanager.h"
 #include "renderobject.h"
+#include "geometrycreator.h"
 #include <QOpenGLFunctions>
 
 MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)
@@ -41,32 +42,13 @@ void MPEGLWidget::initializeGL()
     DEBUG_MESSAGE("                    GLSL VERSION: " << (const char*)f->glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     ShaderManager::create();
+    GeometryCreator::create();
     MaterialManager::create();
 
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MPEGLWidget::destroyGL);
-
     f->glClearColor(1.0f, .0f, 1.0f, 1.0f);
 
-    rBuffer = createptr<RenderBuffer>();
-
-    rBuffer->setColorsBuffer(
-        { Qt::red, Qt::green, Qt::blue,
-          Qt::red, Qt::green, Qt::blue,
-        });
-
-    rBuffer->setPositionsBuffer(std::vector<QVector3D>
-    {
-        { -1.0f, -1.0f,  0.0f}, // v0
-        {  1.0f, -1.0f,  0.0f}, // v1
-        {  1.0f,  1.0f,  0.0f}, // v2
-
-        {  1.0f,  1.0f,  0.0f}, // v0
-        { -1.0f,  1.0f,  0.0f}, // v1
-        { -1.0f, -1.0f,  0.0f} // v2
-    });
-
-//    rBuffer->setIndicesBuffer(indices);
-
+    rBuffer = GeometryCreator::GetInstance()->exampleQuad();
 }
 
 void MPEGLWidget::resizeGL(int w, int h)
@@ -106,6 +88,8 @@ void MPEGLWidget::paintGL()
 void MPEGLWidget::destroyGL()
 {
     // TO DO: Is Never called.
+    ShaderManager::destroy();
+    GeometryCreator::destroy();
     MaterialManager::destroy();
 }
 

@@ -22,7 +22,15 @@ RenderObject::RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material)
     _vertexCount = rBuffer->getBuffer(BufferType::Positions)->numElements();
     for (int i=0;i<(int)BufferType::InternalBufferCount;++i)
     {
-        bindings.push_back(createptr<AttributeBinder>(_rBuffer->getBuffer((BufferType)i),_material->shader(),(BufferType)i));
+        ptr<BufferData> data = _rBuffer->getBuffer((BufferType)i);
+        if (data)
+        {
+            bindings.push_back(createptr<AttributeBinder>(data,_material->shader(),(BufferType)i));
+        }
+        else
+        {
+
+        }
     }
 
     _material->shader()->release();
@@ -59,19 +67,12 @@ AttributeBinder::~AttributeBinder()
 AttributeBinder::AttributeBinder(ptr<BufferData> data, ptr<Shader> shader, BufferType bufferType)
 {
     Q_ASSERT(shader);
-    if (data)
-    {
-        buffer = createptr<QOpenGLBuffer>();
-        buffer->setUsagePattern( QOpenGLBuffer::StaticDraw );
-        buffer->create();
-        buffer->bind();
-        Q_ASSERT(data->data().size()>0);
-        buffer->allocate( &(data->data()[0]), data->data().size() * sizeof(float) );
-        shader->enableAttributeAndSetBuffer(bufferType,data->tupleSize());
-    }
-    else
-    {
-        shader->disableAttribute(bufferType);
-    }
+    Q_ASSERT(data);
+    Q_ASSERT(data->data().size()>0);
+    buffer = createptr<QOpenGLBuffer>();
+    buffer->setUsagePattern( QOpenGLBuffer::StaticDraw );
+    buffer->create();
+    buffer->bind();
+    buffer->allocate( &(data->data()[0]), data->data().size() * sizeof(float) );
+    shader->enableAttributeAndSetBuffer(bufferType,data->tupleSize());
 }
-
