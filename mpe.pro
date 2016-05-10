@@ -11,8 +11,7 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     mpeapplication.cpp \
-    mpeglwidget.cpp \
-    materialmanager.cpp
+    mpeglwidget.cpp
 
 HEADERS  += mainwindow.h \
     mpeapplication.h \

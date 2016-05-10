@@ -12,7 +12,7 @@ public :
     ~MPEOpenGLContext() {}
 
     Q_DISABLE_COPY(MPEOpenGLContext);
-    void setContext(QOpenGLContext *context);
+    void setContext(QOpenGLContext *context) { m_context = context; }
     inline QOpenGLContext *context() const { return m_context; }
     inline QOpenGLFunctions *glFunctions() const { return m_openGLFunctions; }
 private:

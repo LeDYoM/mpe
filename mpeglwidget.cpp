@@ -17,47 +17,23 @@ MPEGLWidget::~MPEGLWidget()
 
 void MPEGLWidget::initializeGL()
 {
-    OpenGLUser::setContext(context());
+    MPEOpenGLContext::setContext(QOpenGLWidget::context());
     QOpenGLFunctions *f = glFunctions();
 
     DEBUG_MESSAGE("-----------------------------------------------------------");
     DEBUG_MESSAGE("Created OpenGL context:");
-    DEBUG_MESSAGE("Window OpenGl: " << context()->format().majorVersion() << "." << format().minorVersion());
-    DEBUG_MESSAGE("Context valid: " << context()->isValid());
-    DEBUG_MESSAGE("Really used OpenGl: " << context()->format());
-    DEBUG_MESSAGE("Is Core profile: " << (context()->format().profile() == QSurfaceFormat::CoreProfile));
+    DEBUG_MESSAGE("Window OpenGl: " << QOpenGLWidget::context()->format().majorVersion() << "." << format().minorVersion());
+    DEBUG_MESSAGE("Context valid: " << QOpenGLWidget::context()->isValid());
+    DEBUG_MESSAGE("Really used OpenGl: " << QOpenGLWidget::context()->format());
+    DEBUG_MESSAGE("Is Core profile: " << (QOpenGLWidget::context()->format().profile() == QSurfaceFormat::CoreProfile));
     DEBUG_MESSAGE("OpenGl information: VENDOR:       " << (const char*)f->glGetString(GL_VENDOR));
     DEBUG_MESSAGE("                    RENDERDER:    " << (const char*)f->glGetString(GL_RENDERER));
     DEBUG_MESSAGE("                    VERSION:      " << (const char*)f->glGetString(GL_VERSION));
     DEBUG_MESSAGE("                    GLSL VERSION: " << (const char*)f->glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-    ShaderManager::create();
-    MaterialManager::create();
-
-    connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MPEGLWidget::destroyGL);
+    connect(QOpenGLWidget::context(), &QOpenGLContext::aboutToBeDestroyed, this, &MPEGLWidget::destroyGL);
 
     f->glClearColor(1.0f, .0f, 1.0f, 1.0f);
-
-    rBuffer = createptr<RenderBuffer>();
-
-    rBuffer->setColorsBuffer(
-        { Qt::red, Qt::green, Qt::blue,
-          Qt::red, Qt::green, Qt::blue,
-        });
-
-    rBuffer->setPositionsBuffer(std::vector<QVector3D>
-    {
-        { -1.0f, -1.0f,  0.0f}, // v0
-        {  1.0f, -1.0f,  0.0f}, // v1
-        {  1.0f,  1.0f,  0.0f}, // v2
-
-        {  1.0f,  1.0f,  0.0f}, // v0
-        { -1.0f,  1.0f,  0.0f}, // v1
-        { -1.0f, -1.0f,  0.0f} // v2
-    });
-
-//    rBuffer->setIndicesBuffer(indices);
-
 }
 
 void MPEGLWidget::resizeGL(int w, int h)
@@ -84,20 +60,12 @@ void MPEGLWidget::paintGL()
     // Draw the scene:
     glFunctions()->glClear(GL_COLOR_BUFFER_BIT);
 
-    MaterialManager *materialManager = MaterialManager::GetInstance();
-    if (!rObject)
-    {
-        rObject = createptr<RenderObject>(rBuffer,MaterialManager::GetInstance()->defaultMaterial());
-    }
-    rObject->render(&m_projection);
     updateFps();
     update();
 }
 
 void MPEGLWidget::destroyGL()
 {
-    // TO DO: Is Never called.
-    MaterialManager::destroy();
 }
 
 void MPEGLWidget::updateFps()
