@@ -12,17 +12,11 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     mpeapplication.cpp \
     mpeglwidget.cpp \
-    materialmanager.cpp \
-    openglmanager.cpp \
-    renderbuffer.cpp
+    materialmanager.cpp
 
 HEADERS  += mainwindow.h \
     mpeapplication.h \
     mpeglwidget.h \
     log.h \
-    materialmanager.h \
-    openglmanager.h \
-    renderbuffer.h \
-    singleton.h \
     memm.h \
-    buffertype.h
+    mpeopenglcontext.hpp

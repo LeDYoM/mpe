@@ -1,8 +1,6 @@
 #include "mpeglwidget.h"
 #include "log.h"
-#include "openglmanager.h"
-#include "renderbuffer.h"
-#include "materialmanager.h"
+#include "mpeopenglcontext.hpp"
 #include <QOpenGLFunctions>
 
 MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)
@@ -16,9 +14,6 @@ MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 MPEGLWidget::~MPEGLWidget()
 {
 }
-
-ptr<RenderBuffer> rBuffer;
-ptr<RenderObject> rObject{nullptr};
 
 void MPEGLWidget::initializeGL()
 {
