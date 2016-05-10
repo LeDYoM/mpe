@@ -7,9 +7,7 @@
 
 #include "openglmanager.h"
 
-class MaterialManager;
-
-class MPEGLWidget : public QOpenGLWidget, public OpenGLUser
+class MPEGLWidget : public QOpenGLWidget, public MPEOpenGLContext
 {
     Q_OBJECT
 public:

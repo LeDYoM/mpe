@@ -21,7 +21,8 @@ static const char *fragmentShaderSource =
     "   gl_FragColor = col;\n"
     "}\n";
 
-MaterialManager::MaterialManager()
+MaterialManager::MaterialManager(MPEOpenGLContext *parent)
+    : MPEOpenGLContextClient{parent}
 {
     VERBOSE_MESSAGE("Initializing MaterialManager");
     _defaultMaterial = createptr<Material>();
@@ -78,7 +79,8 @@ void Material::setAsDefault()
 }
 
 
-ShaderManager::ShaderManager()
+ShaderManager::ShaderManager(MPEOpenGLContext *parent)
+    : MPEOpenGLContextClient{parent}
 {
     addShader("default",vertexShaderSource,fragmentShaderSource);
 }
@@ -99,7 +101,7 @@ bool ShaderManager::addShader(const char *name, const char *vertexCode, const ch
     return true;
 }
 
-void ShaderManager::setCurrentActiveShader(ptr<Shader> shader)
+void ShaderManager::setCurrentActiveShader(sptr<Shader> shader)
 {
     currentActiveShader = shader;
     currentActiveShader->bind();
@@ -116,7 +118,12 @@ void ShaderManager::unsetShader()
 
 
 Shader::Shader(ptr<QOpenGLShaderProgram> program)
-    : _program{program}
+{
+
+}
+
+Shader::Shader(ShaderManager *sManager, sptr<QOpenGLShaderProgram> program)
+    : MPEOpenGLContextClient{sManager}, _program{program}
 {
 
 }

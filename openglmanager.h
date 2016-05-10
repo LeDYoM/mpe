@@ -1,25 +1,37 @@
 #ifndef OPENGLMANAGER_H
 #define OPENGLMANAGER_H
 
-#include <QMatrix4x4>
 
 class QOpenGLContext;
 class QOpenGLFunctions;
-class RenderBuffer;
-class Material;
 
-class OpenGLUser
+class MPEOpenGLContext
 {
 public :
-    OpenGLUser() {}
-    virtual ~OpenGLUser() {}
+    MPEOpenGLContext() {}
+    ~MPEOpenGLContext() {}
 
-    static void setContext(QOpenGLContext *context);
-    static inline QOpenGLContext *__context() { return _context; }
-    static inline QOpenGLFunctions *glFunctions() { return _openGLFunctions; }
+    Q_DISABLE_COPY(MPEOpenGLContext);
+    void setContext(QOpenGLContext *context);
+    inline QOpenGLContext *context() const { return m_context; }
+    inline QOpenGLFunctions *glFunctions() const { return m_openGLFunctions; }
 private:
-    static QOpenGLContext *_context;
-    static QOpenGLFunctions *_openGLFunctions;
+    QOpenGLContext *m_context{nullptr};
+    QOpenGLFunctions *m_openGLFunctions{nullptr};
+};
+
+class MPEOpenGLContextClient
+{
+public:
+    MPEOpenGLContextClient(MPEOpenGLContext *provider): m_provider{provider} {}
+    MPEOpenGLContextClient(MPEOpenGLContextClient *other): m_provider{other->m_provider} {}
+    MPEOpenGLContextClient(const MPEOpenGLContextClient &other): m_provider{other.m_provider} {}
+    ~MPEOpenGLContextClient() {}
+    inline QOpenGLContext *context() const { return m_provider->context(); }
+    inline QOpenGLFunctions *glFunctions() const { return m_provider->glFunctions(); }
+    inline MPEOpenGLContext *provider() const { return m_provider; }
+private:
+    MPEOpenGLContext *m_provider;
 };
 
 #endif // OPENGLMANAGER_H

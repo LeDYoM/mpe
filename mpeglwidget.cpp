@@ -15,8 +15,6 @@ MPEGLWidget::MPEGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 
 MPEGLWidget::~MPEGLWidget()
 {
-    MaterialManager::destroy();
-    ShaderManager::destroy();
 }
 
 ptr<RenderBuffer> rBuffer;

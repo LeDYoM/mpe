@@ -3,19 +3,19 @@
 
 #include <memory>
 
-template <typename T> using ptr = std::shared_ptr<T>;
-template <typename T> using raw_ptr = std::unique_ptr<T>;
+template <typename T> using sptr = std::shared_ptr<T>;
+template <typename T> using uptr = std::unique_ptr<T>;
 
 template <typename T>
-inline ptr<T> createptr() noexcept
+inline sptr<T> createptr()
 {
-    return std::make_shared<T>();
+    return sptr<T>(new T());
 }
 
 template <typename T, typename... Args>
-inline ptr<T> createptr(Args&&... args) noexcept
+inline sptr<T> createptr(Args&&... args) noexcept
 {
-    return std::make_shared<T>(std::forward<Args>(args)...);
+    return sptr<T>(new T(std::forward<Args>(args)...));
 }
 
 #endif // MEMM_H

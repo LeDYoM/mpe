@@ -3,7 +3,6 @@
 
 #include <list>
 #include "openglmanager.h"
-#include "singleton.h"
 #include "memm.h"
 #include <QMatrix4x4>
 #include "buffertype.h"
@@ -11,7 +10,7 @@
 class QOpenGLShaderProgram;
 class Shader;
 
-class Material : public OpenGLUser
+class Material : public MPEOpenGLContextClient
 {
 public:
     Material();
@@ -25,20 +24,20 @@ public:
     ptr<Shader> shader() const { return _shader; }
 private:
 
-    ptr<Shader> _shader;
+    sptr<Shader> _shader;
 
     void setAsDefault();
 };
 
-class MaterialManager : public OpenGLUser, public Singleton<MaterialManager>
+class MaterialManager : public MPEOpenGLContextClient
 {
 public:
-    MaterialManager();
-    virtual ~MaterialManager();
+    MaterialManager(MPEOpenGLContext *parent);
+    ~MaterialManager();
 
     Q_DISABLE_COPY(MaterialManager)
 
-    inline ptr<Material> defaultMaterial() const { return _defaultMaterial; }
+    inline sptr<Material> defaultMaterial() const { return _defaultMaterial; }
     void setProjectionMatrix(const QMatrix4x4 &projectionMatrix);
     inline const QMatrix4x4 &projectionMatrix() const { return _projectionMatrix; }
     void setActiveMaterial(ptr<Material> material);
@@ -49,16 +48,16 @@ private:
     ptr<Material> _defaultMaterial{nullptr};
     QMatrix4x4 _projectionMatrix;
 
-    ptr<Material> _activeRenderMaterial{nullptr};
+    sptr<Material> _activeRenderMaterial{nullptr};
 };
 
-class Shader : public OpenGLUser
+class Shader : public MPEOpenGLContextClient
 {
 public:
-    Shader(ptr<QOpenGLShaderProgram> program);
+    Shader(ShaderManager *sManager,sptr<QOpenGLShaderProgram> program);
     virtual ~Shader();
     inline int getAttributeIndex(BufferType bf) const { return attributeIndices[bf]; }
-//    inline ptr<QOpenGLShaderProgram> program() const { return _program; }
+//    inline sptr<QOpenGLShaderProgram> program() const { return _program; }
 
     void enableAttributeAndSetBuffer(BufferType bufferType,int tupleSize);
     void enableAttribute(BufferType bufferType);
@@ -68,27 +67,27 @@ public:
     void release();
 private:
     std::vector<int> attributeIndices= {0,1,2};
-    ptr<QOpenGLShaderProgram> _program{nullptr};
+    sptr<QOpenGLShaderProgram> _program{nullptr};
 
 };
 
-class ShaderManager : public OpenGLUser, public Singleton<ShaderManager>
+class ShaderManager : public MPEOpenGLContextClient
 {
 public:
-    ShaderManager();
+    ShaderManager(MPEOpenGLContext *parent);
     virtual ~ShaderManager();
 
-    inline ptr<Shader> defaultShader() const { return _defaultShader; }
+    inline sptr<Shader> defaultShader() const { return _defaultShader; }
     bool addShader(const char *name,const char *vertexCode,const char *fragmentCode);
 
-    void setCurrentActiveShader(ptr<Shader> shader);
+    void setCurrentActiveShader(sptr<Shader> shader);
     void unsetShader();
 
     inline ptr<Shader> activeShader() const { return currentActiveShader; }
 
 private:
-    ptr<Shader> _defaultShader{nullptr};
-    ptr<Shader> currentActiveShader{nullptr};
+    sptr<Shader> _defaultShader{nullptr};
+    sptr<Shader> currentActiveShader{nullptr};
 };
 
 #endif // MATERIALMANAGER_H

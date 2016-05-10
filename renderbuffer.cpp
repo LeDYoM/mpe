@@ -133,7 +133,7 @@ AttributeBinder::~AttributeBinder()
         buffer->release();
 }
 
-AttributeBinder::AttributeBinder(ptr<BufferData> data, ptr<Shader> shader, BufferType bufferType)
+AttributeBinder::AttributeBinder(sptr<BufferData> data, sptr<Shader> shader, BufferType bufferType)
 {
     Q_ASSERT(shader);
     if (data)

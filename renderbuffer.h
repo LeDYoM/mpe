@@ -40,27 +40,27 @@ public:
     void setColorsBuffer(const std::vector<QVector3D> &data);
     void setNormalsBuffer(const std::vector<QVector3D> &data);
     void setBuffer(BufferType type, const std::vector<float> &data,int tupleSize);
-    inline ptr<BufferData> getBuffer(BufferType bt) const { return buffers[bt]; }
+    inline sptr<BufferData> getBuffer(BufferType bt) const { return buffers[bt]; }
 
 private:
-    std::vector<ptr<BufferData>> buffers{(size_t)(BufferType::InternalBufferCount)};
+    std::vector<sptr<BufferData>> buffers{(size_t)(BufferType::InternalBufferCount)};
 };
 
 class Shader;
 
-class AttributeBinder : public OpenGLUser
+class AttributeBinder : public MPEOpenGLContextClient
 {
 public:
-    AttributeBinder(ptr<BufferData> data,ptr<Shader> shader ,BufferType bufferType);
+    AttributeBinder(ptr<BufferData> data, sptr<Shader> shader ,BufferType bufferType);
     virtual ~AttributeBinder();
 private:
-    ptr<QOpenGLBuffer> buffer{nullptr};
+    sptr<QOpenGLBuffer> buffer{nullptr};
 };
 
 class RenderObject : public OpenGLUser
 {
 public:
-    RenderObject(ptr<RenderBuffer> rBuffer, ptr<Material> material);
+    RenderObject(ptr<RenderBuffer> rBuffer, sptr<Material> material);
     virtual ~RenderObject();
 
     void render(const QMatrix4x4 *projectionMatrix);

@@ -11,6 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    widget->context()->deleteLater();
+    //widget->context()->deleteLater();
     widget->deleteLater();
 }
