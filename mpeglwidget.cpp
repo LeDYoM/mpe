@@ -22,10 +22,10 @@ void MPEGLWidget::initializeGL()
 
     DEBUG_MESSAGE("-----------------------------------------------------------");
     DEBUG_MESSAGE("Created OpenGL context:");
-    DEBUG_MESSAGE("Window OpenGl: " << QOpenGLWidget::context()->format().majorVersion() << "." << format().minorVersion());
-    DEBUG_MESSAGE("Context valid: " << QOpenGLWidget::context()->isValid());
-    DEBUG_MESSAGE("Really used OpenGl: " << QOpenGLWidget::context()->format());
-    DEBUG_MESSAGE("Is Core profile: " << (QOpenGLWidget::context()->format().profile() == QSurfaceFormat::CoreProfile));
+    DEBUG_MESSAGE("Window OpenGl: " << context()->format().majorVersion() << "." << format().minorVersion());
+    DEBUG_MESSAGE("Context valid: " << context()->isValid());
+    DEBUG_MESSAGE("Really used OpenGl: " << context()->format());
+    DEBUG_MESSAGE("Is Core profile: " << (context()->format().profile() == QSurfaceFormat::CoreProfile));
     DEBUG_MESSAGE("OpenGl information: VENDOR:       " << (const char*)f->glGetString(GL_VENDOR));
     DEBUG_MESSAGE("                    RENDERDER:    " << (const char*)f->glGetString(GL_RENDERER));
     DEBUG_MESSAGE("                    VERSION:      " << (const char*)f->glGetString(GL_VERSION));

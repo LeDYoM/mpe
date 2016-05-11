@@ -12,8 +12,8 @@ public :
     ~MPEOpenGLContext() {}
 
     Q_DISABLE_COPY(MPEOpenGLContext);
-    void setContext(QOpenGLContext *context) { m_context = context; }
-    inline QOpenGLContext *context() const { return m_context; }
+    void setContext(QOpenGLContext *context);
+    inline QOpenGLContext *MPEglcontext() const { return m_context; }
     inline QOpenGLFunctions *glFunctions() const { return m_openGLFunctions; }
 private:
     QOpenGLContext *m_context{nullptr};
@@ -27,7 +27,7 @@ public:
     MPEOpenGLContextClient(MPEOpenGLContextClient *other): m_provider{other->m_provider} {}
     MPEOpenGLContextClient(const MPEOpenGLContextClient &other): m_provider{other.m_provider} {}
     ~MPEOpenGLContextClient() {}
-    inline QOpenGLContext *context() const { return m_provider->context(); }
+    inline QOpenGLContext *context() const { return m_provider->MPEglcontext(); }
     inline QOpenGLFunctions *glFunctions() const { return m_provider->glFunctions(); }
     inline MPEOpenGLContext *provider() const { return m_provider; }
 private:

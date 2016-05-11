@@ -11,7 +11,9 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     mpeapplication.cpp \
-    mpeglwidget.cpp
+    mpeglwidget.cpp \
+    mpeopenglcontext.cpp \
+    camera.cpp
 
 HEADERS  += \
     mpeopenglcontext.hpp \
@@ -19,4 +21,5 @@ HEADERS  += \
     mainwindow.hpp \
     memm.hpp \
     mpeapplication.hpp \
-    mpeglwidget.hpp
+    mpeglwidget.hpp \
+    camera.hpp
