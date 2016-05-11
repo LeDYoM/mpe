@@ -2,7 +2,7 @@
 #define MPEAPPLICATION_H
 
 #include <QApplication>
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 
 class MPEApplication : public QApplication
 {

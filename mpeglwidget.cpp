@@ -1,5 +1,5 @@
-#include "mpeglwidget.h"
-#include "log.h"
+#include "mpeglwidget.hpp"
+#include "log.hpp"
 #include "mpeopenglcontext.hpp"
 #include <QOpenGLFunctions>
 

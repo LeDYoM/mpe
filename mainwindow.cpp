@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "mpeglwidget.h"
+#include "mainwindow.hpp"
+#include "mpeglwidget.hpp"
 #include <QOpenGLContext>
 
 MainWindow::MainWindow(QWidget *parent) :

@@ -13,9 +13,10 @@ SOURCES += main.cpp\
     mpeapplication.cpp \
     mpeglwidget.cpp
 
-HEADERS  += mainwindow.h \
-    mpeapplication.h \
-    mpeglwidget.h \
-    log.h \
-    memm.h \
-    mpeopenglcontext.hpp
+HEADERS  += \
+    mpeopenglcontext.hpp \
+    log.hpp \
+    mainwindow.hpp \
+    memm.hpp \
+    mpeapplication.hpp \
+    mpeglwidget.hpp

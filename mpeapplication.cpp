@@ -1,5 +1,5 @@
-#include "mpeapplication.h"
-#include "mainwindow.h"
+#include "mpeapplication.hpp"
+#include "mainwindow.hpp"
 
 MPEApplication::~MPEApplication()
 {
