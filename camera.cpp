@@ -1,6 +1,7 @@
 #include "camera.hpp"
+#include "scene.hpp"
 
-Camera::Camera(QObject *parent) : QObject(parent)
+Camera::Camera(Scene *parent) : QObject(parent)
 {
 
 }

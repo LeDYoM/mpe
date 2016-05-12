@@ -3,15 +3,14 @@
 
 #include <QObject>
 
+class Scene;
+
 class Camera : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit Camera(QObject *parent = 0);
-
-signals:
-
-public slots:
+    explicit Camera(Scene *parent = nullptr);
 };
 
 #endif // CAMERA_H

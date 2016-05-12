@@ -13,7 +13,8 @@ SOURCES += main.cpp\
     mpeapplication.cpp \
     mpeglwidget.cpp \
     mpeopenglcontext.cpp \
-    camera.cpp
+    camera.cpp \
+    scene.cpp
 
 HEADERS  += \
     mpeopenglcontext.hpp \
@@ -22,4 +23,5 @@ HEADERS  += \
     memm.hpp \
     mpeapplication.hpp \
     mpeglwidget.hpp \
-    camera.hpp
+    camera.hpp \
+    scene.hpp
