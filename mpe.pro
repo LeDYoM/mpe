@@ -14,7 +14,8 @@ SOURCES += main.cpp\
     mpeglwidget.cpp \
     mpeopenglcontext.cpp \
     camera.cpp \
-    scene.cpp
+    scene.cpp \
+    renderer.cpp
 
 HEADERS  += \
     mpeopenglcontext.hpp \
@@ -24,4 +25,5 @@ HEADERS  += \
     mpeapplication.hpp \
     mpeglwidget.hpp \
     camera.hpp \
-    scene.hpp
+    scene.hpp \
+    renderer.hpp
