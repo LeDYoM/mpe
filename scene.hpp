@@ -3,11 +3,20 @@
 
 #include <QObject>
 
+class Camera;
+
 class Scene : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(Camera* camera READ camera NOTIFY cameraChanged)
 public:
     explicit Scene(QObject *parent = 0);
+    Camera *camera() const { return m_camera; }
+
+
+private:
+    Camera *m_camera;
 };
 
 #endif // SCENE_H
