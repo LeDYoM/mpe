@@ -9,7 +9,7 @@ class Scene : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(Camera* camera READ camera NOTIFY cameraChanged)
+    Q_PROPERTY(Camera* camera READ camera)
 public:
     explicit Scene(QObject *parent = 0);
     Camera *camera() const { return m_camera; }
